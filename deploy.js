@@ -2,6 +2,7 @@ const { REST, Routes } = require('discord.js');
 const { clientIDDEV, guildIDDEV, tokenDEV } = require('./config.json');
 const { clientIDPROD, guildIDPROD, tokenPROD } = require('./config.json')
 const fs = require('node:fs');
+const logger = require('./utils/logger.js')
 
 const prod = false;
 
@@ -19,7 +20,7 @@ if (!prod) {
 
     (async () => {
         try {
-            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+            logger.info(`Started refreshing ${commands.length} application (/) commands.`);
 
             const data = await rest.put(
                 Routes.applicationGuildCommands(clientIDDEV, guildIDDEV),
@@ -27,7 +28,7 @@ if (!prod) {
                 { body: commands },
             );
 
-            console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+            logger.info(`Successfully reloaded ${data.length} application (/) commands.`);
         } catch (error) {
             console.error(error);
         }
@@ -46,14 +47,14 @@ else {
 
     (async () => {
         try {
-            console.log(`Started refreshing ${commands.length} application (/) commands.`);
+            logger.info(`Started refreshing ${commands.length} application (/) commands.`);
 
             const data = await rest.put(
                 Routes.applicationCommands(clientIDPROD),
                 { body: commands },
             );
 
-            console.log(`Successfully reloaded ${data.length} application (/) commands.`);
+            logger.info(`Successfully reloaded ${data.length} application (/) commands.`);
         } catch (error) {
             console.error(error);
         }
