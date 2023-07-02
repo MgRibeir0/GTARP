@@ -5,6 +5,7 @@ const { tokenPROD, tokenDEV } = require('./config.json');
 const { db } = require('./utils/firebase.js');
 const ChannelSelectMenu = require('./utils/builders/channelSelector.js').ChannelSelectMenu;
 const TextInput = require('./utils/builders/textInput.js').TextInput;
+const logger = require('./utils/logger.js');
 
 const client = new Client({
     intents: [
@@ -28,9 +29,9 @@ for (const file of commandFiles) {
     // Set a new item in the Collection with the key as the command name and the value as the exported module
     if ('data' in command && 'execute' in command) {
         client.commands.set(command.data.name, command);
-        console.log(`[INFO] Loaded command ${command.data.name}`)
+        logger.info(`Loaded command ${command.data.name}`)
     } else {
-        console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+        logger.warn(`The command ${command.data.name} is missing a required "data" or "execute" property.`);
     }
 }
 
@@ -258,7 +259,7 @@ async function handleSelectMenus(interaction) {
                 })
 
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
     if (interaction.customId === 'setup-select-logs') {
@@ -279,7 +280,7 @@ async function handleSelectMenus(interaction) {
                     ephemeral: true
                 })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
     if (interaction.customId === 'setup-select-sets') {
@@ -300,7 +301,7 @@ async function handleSelectMenus(interaction) {
                     ephemeral: true
                 })
         } catch (error) {
-            console.log(error)
+            logger.error(error)
         }
     }
     if (interaction.customId === 'setup-select-roles') {
@@ -321,7 +322,7 @@ async function handleSelectMenus(interaction) {
                     ephemeral: true
                 })
         } catch (error) {
-            console.log(error)
+            logger(error)
         }
     }
 }
@@ -331,11 +332,11 @@ async function giveRoles(interaction) {
     user = await interaction.guild.members.fetch(userID)
 
     const roles = client.roles.get(interaction.guild.id)
-    console.log(roles)
+    logger.debug(roles)
     const passport = interaction.message.embeds[0].data.description.split('\n')[2].split('**Passaporte:**')[1]
     const nick = interaction.message.embeds[0].data.description.split('\n')[1].split('**Nome:**')[1];
-    console.log(interaction.message.embeds[0].data.description.split('\n')[1].split('**Nome:**')[1]);
-    console.log(nick.length)
+    logger.debug(interaction.message.embeds[0].data.description.split('\n')[1].split('**Nome:**')[1]);
+    logger.debug(nick.length)
     nick.length >= 25 ? user.setNickname(`${nick.slice(0, 20)}... | ${passport}`) : user.setNickname(`${nick} | ${passport}`)
     user.roles.add(roles);
 }
@@ -418,7 +419,11 @@ client.on(Events.ClientReady, async c => {
         })
     })
 
-    console.log(`Logged in as ${c.user.tag}`)
+    logger.info(`Logged in as ${c.user.tag}`)
+})
+
+client.on(Events.Error, err => {
+
 })
 
 // client.login(tokenPROD);
