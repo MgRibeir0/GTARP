@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js')
-const { botImageURL, whitespace, devServerInviteURL } = require('../utils/constants')
+const { botImageURL, whitespace, devServerInviteURL } = require('../../utils/constants')
 
 module.exports = {
     data: new SlashCommandBuilder()
