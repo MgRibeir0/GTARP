@@ -34,7 +34,7 @@ for (const folder of commandFolders) {
             client.commands.set(command.data.name, command);
             logger.info(`[${commandsPath.split('\\')[8]}] Command ${command.data.name} loaded!`)
         } else {
-            console.log(`[WARNING] The command ${command.data.name} is missing a required "data" or "execute" property.`);
+            logger.warn(`The command ${filePath.split('\\')[9]} is missing a required "data" or "execute" property.`);
         }
     }
 }

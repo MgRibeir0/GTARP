@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "bot": "node . | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+    "bot": "nodemon . | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
     "deploy": "node deploy.js | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'"
   },
   "keywords": [],
