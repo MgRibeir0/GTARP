@@ -1,3 +1,4 @@
 node_modules
 config.json
 utils/firebase.js
+*.txt
