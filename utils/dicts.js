@@ -1,7 +1,7 @@
 const { ChannelType, TextInputStyle } = require('discord.js')
 
 module.exports = {
-    typeChannels: {
+    channelsType: {
         'text': ChannelType.GuildText,
         'voice': ChannelType.GuildVoice,
         'category': ChannelType.GuildCategory

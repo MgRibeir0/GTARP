@@ -6,7 +6,8 @@ const { db } = require('./utils/firebase.js');
 const ChannelSelectMenu = require('./utils/builders/channelSelector.js').ChannelSelectMenu;
 const TextInput = require('./utils/builders/textInput.js').TextInput;
 const logger = require('./utils/logger.js');
-
+const cron = require('node-cron');
+const { updateSubscriptions } = require('./utils/subscription/sub.js');
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
@@ -39,6 +40,16 @@ for (const folder of commandFolders) {
     }
 }
 
+client.on(Events.GuildCreate, async guild => {
+
+    db.ref(`subscriptions/${guild.id}`).once('value', async snapshot => {
+        if (!snapshot.exists()) {
+            await createGuildOnDB(guild)
+        }
+    })
+
+})
+
 client.on(Events.InteractionCreate, async interaction => {
     if (!interaction.isChatInputCommand() &&
         !interaction.isAnySelectMenu() &&
@@ -51,6 +62,48 @@ client.on(Events.InteractionCreate, async interaction => {
     if (interaction.isModalSubmit()) handleModals(interaction);
 
 });
+
+
+client.on(Events.ClientReady, async c => {
+
+    //checks the subscriptions every day at 00:00
+    cron.schedule('*/25 * * * *', async () => {
+        updateSubscriptions(client)
+    })
+
+    c.guilds.cache.forEach(guild => {
+        retrieveRoles(guild.id)
+        db.ref(`guilds/${guild.id}/config`).once('value').then(async snapshot => {
+            if (!snapshot.exists()) return;
+            const config = snapshot.val()
+            if (config.logs) {
+                client.configs.set(guild.id, config);
+                const guildFetched = await client.guilds.fetch(guild.id)
+                const channelID = client.configs.get(guild.id)['channel']
+                const channel = await guildFetched.channels.fetch(channelID)
+                if (!channel) return;
+                const message = await channel.messages.fetch({ limit: 1 })
+                if (message.size === 0) sendFirstMessage(channel);
+            }
+        })
+    })
+
+    logger.info(`Logged in as ${c.user.tag}`)
+})
+
+client.on(Events.Error, err => {
+
+})
+
+
+async function createGuildOnDB(guild) {
+    db.ref(`subscriptions/${guild.id}`).set({
+        active: false,
+        freeTrial: true,
+        daysLeft: 0,
+        type: 'free'
+    })
+}
 
 async function handleModals(interaction) {
     if (interaction.customId === 'modal-set-form') {
@@ -404,31 +457,6 @@ async function retrieveRoles(guildID) {
         client.roles.set(guildID, roles)
     })
 }
-
-client.on(Events.ClientReady, async c => {
-    c.guilds.cache.forEach(guild => {
-        retrieveRoles(guild.id)
-        db.ref(`guilds/${guild.id}/config`).once('value').then(async snapshot => {
-            if (!snapshot.exists()) return;
-            const config = snapshot.val()
-            if (config.logs) {
-                client.configs.set(guild.id, config);
-                const guildFetched = await client.guilds.fetch(guild.id)
-                const channelID = client.configs.get(guild.id)['channel']
-                const channel = await guildFetched.channels.fetch(channelID)
-                if (!channel) return;
-                const message = await channel.messages.fetch({ limit: 1 })
-                if (message.size === 0) sendFirstMessage(channel);
-            }
-        })
-    })
-
-    logger.info(`Logged in as ${c.user.tag}`)
-})
-
-client.on(Events.Error, err => {
-
-})
 
 // client.login(tokenPROD);
 client.login(tokenDEV);

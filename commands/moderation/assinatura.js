@@ -17,14 +17,14 @@ module.exports = {
                 { name: 'Gratuito - **R$0,00**', value: 'Acesso limitado ao bot, periodo de teste de 5 dias' },
                 { name: whitespace, value: whitespace },
                 { name: 'Planos Mensais', value: whitespace },
-                { name: 'Mensal Padrão - **R$30**', value: 'Acesso ao bot principal', inline: true },
+                { name: 'Mensal Padrão - **R$40**', value: 'Acesso ao bot principal', inline: true },
                 { name: whitespace, value: whitespace, inline: true },
-                { name: 'Mensal Premium - **R$50**', value: 'Acesso ao bot principal e +2 funções extras customizáveis', inline: true },
+                { name: 'Mensal Premium - **R$60**', value: 'Acesso ao bot principal e +2 funções extras customizáveis', inline: true },
                 { name: whitespace, value: whitespace },
                 { name: 'Planos Trimestrais', value: whitespace },
-                { name: 'Trimestral Padrão - **R$80**', value: 'Acesso ao bot principal', inline: true },
+                { name: 'Trimestral Padrão - **R$100**', value: 'Acesso ao bot principal', inline: true },
                 { name: whitespace, value: whitespace, inline: true },
-                { name: 'Trimestral Premium - **R$120**', value: 'Acesso ao bot principal e +2 funções extras customizáveis', inline: true },
+                { name: 'Trimestral Premium - **R$160**', value: 'Acesso ao bot principal e +2 funções extras customizáveis', inline: true },
                 { name: whitespace, value: whitespace },
                 { name: 'Para adquirir qualquer assinatura, entre em contato com o desenvolvedor.', value: `**Discord:** ${devServerInviteURL}\n**Discord Tag: gendii_**` }
             )
