@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const logger = require('./utils/logger.js')
 const path = require('node:path');
 
-const prod = false;
+const prod = true;
 
 if (!prod) {
     const commands = [];

@@ -1,4 +1,4 @@
-const { db } = require('../firebase.js')
+const { db } = require('../firebase.js').db
 const { EmbedBuilder, Colors } = require('discord.js')
 const logger = require('../logger.js')
 
@@ -34,14 +34,19 @@ const updateSubscriptions = async (client) => {
                             messageSent: true
                         })
                     }
-
-
                 }
             }
         })
-
     })
+}
 
+async function createGuildOnDB(guild) {
+    db.ref(`subscriptions/${guild.id}`).set({
+        active: false,
+        freeTrial: true,
+        daysLeft: 0,
+        type: 'free'
+    })
 }
 
 module.exports = { updateSubscriptions }
