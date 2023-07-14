@@ -1,4 +1,4 @@
-const { db } = require('../firebase.js').db
+const { db } = require('../firebase.js')
 const { EmbedBuilder, Colors } = require('discord.js')
 const logger = require('../logger.js')
 

@@ -66,6 +66,9 @@ client.on(Events.InteractionCreate, async interaction => {
 
 client.on(Events.ClientReady, async c => {
 
+    const { ActivityType } = require('discord.js')
+    client.user.setActivity('Warframe', { name: 'Acompanhe o desenvolvedor!', type: ActivityType.Streaming, url: 'http://www.twitch.tv/gendii_' })
+
     //checks the subscriptions every day at 00:00
     cron.schedule('*/25 * * * *', async () => {
         updateSubscriptions(client)
@@ -92,7 +95,7 @@ client.on(Events.ClientReady, async c => {
 })
 
 client.on(Events.Error, err => {
-
+    logger.error(err.message)
 })
 
 
@@ -222,12 +225,11 @@ async function handleButtons(interaction) {
 async function handleCommands(interaction) {
     const command = client.commands.get(interaction.commandName);
     if (!command) return;
-
     try {
         await command.execute(interaction, client);
     }
     catch (error) {
-        console.error(error);
+        logger.error(error)
         await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
     }
 
@@ -389,11 +391,9 @@ async function giveRoles(interaction) {
     user = await interaction.guild.members.fetch(userID)
 
     const roles = client.roles.get(interaction.guild.id)
-    logger.debug(roles)
     const passport = interaction.message.embeds[0].data.description.split('\n')[2].split('**Passaporte:**')[1]
     const nick = interaction.message.embeds[0].data.description.split('\n')[1].split('**Nome:**')[1];
     logger.debug(interaction.message.embeds[0].data.description.split('\n')[1].split('**Nome:**')[1]);
-    logger.debug(nick.length)
     nick.length >= 25 ? user.setNickname(`${nick.slice(0, 20)}... | ${passport}`) : user.setNickname(`${nick} | ${passport}`)
     user.roles.add(roles);
 }
