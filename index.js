@@ -386,6 +386,22 @@ async function handleSelectMenus(interaction) {
     }
 }
 
+const { CommandInteraction } = require('discord.js')
+
+/**
+ * 
+ * @param {CommandInteraction} interaction 
+ */
+async function removeRoles(interaction) {
+    userID = interaction.message.embeds[0].data.description.split('\n')[0].split('**ID Discord:** ')[1]
+    user = await interaction.guild.members.fetch(userID)
+
+    //need to change that later to get the roles from the database
+    //rn using a hardcoded role bc im lazy af
+    const roles = '1112659609749032981'
+    user.roles.remove(roles)
+}
+
 async function giveRoles(interaction) {
     userID = interaction.message.embeds[0].data.description.split('\n')[0].split('**ID Discord:** ')[1]
     user = await interaction.guild.members.fetch(userID)
